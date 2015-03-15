@@ -125,8 +125,8 @@ int main(int argc, char *argv[]) {
 		free(rowptr); free(colInd); free(matVal);
 
 		//*** Step 2 - Analyze elements ***//
-		clearwctimer(timerTotal);
-		startwctimer(timerTotal);
+		clear_timer(timerTotal);
+		start_timer(timerTotal);
 
 		// Determine the remote vectors needed, expand local Vector array to receive these.  
 		// Re-index local Column Index array to point to the right Vector Data entry
@@ -155,8 +155,8 @@ int main(int argc, char *argv[]) {
 		// Local Vector entries at the front, remote entries are concatenated starting from: 
 		double *recvVecData = myVecData + vSize; 
 
-		clearwctimer(timer56);
-		startwctimer(timer56);
+		clear_timer(timer56);
+		start_timer(timer56);
 
 		//*** Step 5 - All processors send the actual vector entries to each other ***//
 		MPI_Alltoallv(sendVecData,tosendVecCount,tosendVecPtr,MPI_DOUBLE,recvVecData,
@@ -166,10 +166,10 @@ int main(int argc, char *argv[]) {
 		result = (double *)malloc(sizeof(double) * vSize);
 		computeMatVec(myid, vSize,myRowptr,myColInd,myMatVal,myVecData,result);
 
-		stopwctimer(timer56);
-		stopwctimer(timerTotal);
+		stop_timer(timer56);
+		stop_timer(timerTotal);
 		printf("Total Time Taken: %.2lf sec; Time Taken (Steps 5&6): %.2lf sec.\n",
-			       getwctimer(timerTotal), getwctimer(timer56));	
+			       get_timer(timerTotal), get_timer(timer56));	
 
 		//*** Step 7 - Gather results from all processors ***//
 		totalResult = (double *)malloc(sizeof(double) * nrows);

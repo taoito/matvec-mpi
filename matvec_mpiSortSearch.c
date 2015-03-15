@@ -118,8 +118,8 @@ int main(int argc, char *argv[]) {
 		free(rowptr); free(colInd); free(matVal);
 
 		//// Step 2 - Analyze elements
-		clearwctimer(timerTotal);
-		startwctimer(timerTotal);
+		clear_timer(timerTotal);
+		start_timer(timerTotal);
 
 		// Sort column index of local matrix values to determine remote vector entries
 		numVecTotal = sortGroupVec(myColInd,myNumE,myid,num_procs,nrows,
@@ -150,8 +150,8 @@ int main(int argc, char *argv[]) {
 		// local entries at the front, remote entries are concatenated starting from: 
 		double *recvVecData = vecData + vSize; 
 
-		clearwctimer(timer56);
-		startwctimer(timer56);
+		clear_timer(timer56);
+		start_timer(timer56);
 
 		//// Step 5 - All processors send the actual vector entries to each other 
 		MPI_Alltoallv(sendVecData,tosendVecCount,tosendVecPtr,MPI_DOUBLE,recvVecData,
@@ -170,10 +170,10 @@ int main(int argc, char *argv[]) {
 		result = (double *)malloc(sizeof(double) * vSize);
 		computeMatVec(vSize,myRowptr,myColInd,myMatVal,vecData,result);
 
-		stopwctimer(timer56);
-		stopwctimer(timerTotal);
+		stop_timer(timer56);
+		stop_timer(timerTotal);
 		printf("Total Time Taken: %.2lf sec; Time Taken (Steps 5&6): %.2lf sec.\n",
-			       getwctimer(timerTotal), getwctimer(timer56));	
+			       get_timer(timerTotal), get_timer(timer56));	
 
 		//// Step 7 - Gather results from all processors
 		totalResult = (double *)malloc(sizeof(double) * nrows);
